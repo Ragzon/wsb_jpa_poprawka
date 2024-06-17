@@ -24,6 +24,7 @@ public class PatientEntity {
 	@Column(nullable = false, length = 50, unique = true)
 	private String telephoneNumber;
 
+	// tutaj nie byłem pewien czy zmienić dane by mail był unikatowy czy zmienić kolumnę by była nie unikatowa, zmieniłem dane bo konta na ten sam email są podejrzane
 	@Column(unique = true, length = 100)
 	private String email;
 
@@ -33,7 +34,7 @@ public class PatientEntity {
 	@Column(nullable = false, length = 10)
 	private LocalDate dateOfBirth;
 
-	@OneToMany(mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+	@OneToMany(orphanRemoval = true, mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
 	private Collection<VisitEntity> visits;
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

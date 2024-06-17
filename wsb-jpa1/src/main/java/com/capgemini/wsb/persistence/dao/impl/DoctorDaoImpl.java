@@ -12,13 +12,30 @@ import java.util.List;
 @Repository
 public class DoctorDaoImpl extends AbstractDao<DoctorEntity, Long> implements DoctorDao {
     @Override
-    public List<DoctorEntity> findBySpecialization(Specialization specialization) { // TODO - napisac query
+    public List<DoctorEntity> findBySpecialization(Specialization specialization) { // TODO(DONE) - napisac query
 
-        return new ArrayList<>();
+        return entityManager.createQuery(
+                "SELECT doc FROM DoctorEntity doc " +
+                        "WHERE doc.specialization = :specialization",
+                        DoctorEntity.class
+                ).setParameter("specialization", specialization).getResultList();
     }
 
     @Override
-    public long countNumOfVisitsWithPatient(String docFirstName, String docLastName, String patientFirstName, String patientLastName) { // TODO - napisac query
-        return 1000;
+    public long countNumOfVisitsWithPatient(String docFirstName, String docLastName, String patientFirstName, String patientLastName) { // TODO(DONE) - napisac query
+        return entityManager.createQuery(
+                        "SELECT COUNT(vis) FROM VisitEntity vis " +
+                                "JOIN vis.doctor doc " +
+                                "JOIN vis.patient pat " +
+                                "WHERE doc.firstName = :docFirstName " +
+                                "AND doc.lastName = :docLastName " +
+                                "AND pat.firstName = :patientFirstName " +
+                                "AND pat.lastName = :patientLastName",
+                        Long.class)
+                .setParameter("docFirstName", docFirstName)
+                .setParameter("docLastName", docLastName)
+                .setParameter("patientFirstName", patientFirstName)
+                .setParameter("patientLastName", patientLastName)
+                .getSingleResult();
     }
 }
